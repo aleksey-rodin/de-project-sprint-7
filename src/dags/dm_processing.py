@@ -1,5 +1,6 @@
-import os
 from datetime import datetime
+import os
+
 from airflow import DAG
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 

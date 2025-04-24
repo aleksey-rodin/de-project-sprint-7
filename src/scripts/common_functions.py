@@ -5,6 +5,7 @@ from pyspark.sql.window import Window
 radius = 6371
 
 def distance_to_center(lat_col1, lon_col1, lat_col2, lon_col2):
+    """Рассчитывает расстояние между координатами."""
     distance = (2 * F.lit(radius) * F.asin(F.sqrt(
         F.pow(F.sin((F.radians(lat_col1) - F.radians(lat_col2)) / 2), 2) +
         F.cos(F.radians(lat_col1)) * F.cos(F.radians(lat_col2)) *
@@ -12,12 +13,12 @@ def distance_to_center(lat_col1, lon_col1, lat_col2, lon_col2):
     return distance
 
 def load_data(date, depth, geo_path, events_path, spark):
+    """Читает данные из файлов по указанным параметрам."""
     geo_df = spark.read.csv(geo_path, header=True, sep=";", inferSchema=True)
     geo_df = (
         geo_df
         .withColumn("lat", F.regexp_replace("lat", ",", ".").cast("double"))
         .withColumn("lng", F.regexp_replace("lng", ",", ".").cast("double"))
-#         .F.col("city")
         .withColumnRenamed("lat", "city_lat")
         .withColumnRenamed("lng", "city_lng")
         .withColumnRenamed("id", "id")
@@ -28,6 +29,7 @@ def load_data(date, depth, geo_path, events_path, spark):
     return geo_df, events_df
 
 def geo_event_data(events_df, geo_df):
+    """Соединяет данные по событиям и городам, и возвращает датафрейм по ближайшему городу."""
     joined_df = events_df.select(
         "event.message_id",
         F.col("event.message_from").alias("user_id"),

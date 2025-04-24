@@ -20,6 +20,7 @@ spark = (SparkSession
 
 
 def process_dm_zones(geo_event_df):
+    """Рассчитывает данные для витрины 'Зоны'."""
     window_month = Window().partitionBy(['month', 'city'])
     zones_df = (
         geo_event_df.select('user_id', 'datetime', 'event_type', 'city', 'zone_id')

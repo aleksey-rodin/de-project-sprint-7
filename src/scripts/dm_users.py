@@ -20,6 +20,7 @@ spark = (SparkSession
 
 
 def process_dm_users(geo_event_df):
+    """Рассчитывает данные для витрины 'Пользователи'."""
     events_with_city_df = (
         geo_event_df.select('user_id', 'datetime', 'event_type', 'lat', 'lon', 'date', 'city', 'timezone')
         .withColumn('datetime_ts', F.to_timestamp(F.substring('datetime', 1, 19), 'yyyy-MM-dd HH:mm:ss')))

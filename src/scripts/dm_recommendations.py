@@ -19,6 +19,7 @@ spark = (SparkSession
          .getOrCreate())
 
 def process_dm_recommendations(events_df, geo_event_df):
+    """Рассчитывает данные для витрины 'Рекомендации друзей'."""
     subs_df = (
         events_df.where("event.subscription_channel is not null")
         .select(F.col("event.user").alias("user_id"), "event.subscription_channel")
